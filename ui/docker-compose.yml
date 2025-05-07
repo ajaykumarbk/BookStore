@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  api:
+    image: ghcr.io/ajaykumarbk/bookstore-api:1.0
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgres://user:pass@db:5432/mydb  # Example
+    depends_on:
+      - db
+
+  ui:
+    image: ghcr.io/ajaykumarbk/bookstore-ui:1.0
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
